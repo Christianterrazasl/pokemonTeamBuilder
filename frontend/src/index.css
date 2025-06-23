@@ -11,5 +11,7 @@
 }
 
 @layer base {
-  @apply font-poppins;
+  html{
+    font-family: var(--font-poppins);
+  }
 }
