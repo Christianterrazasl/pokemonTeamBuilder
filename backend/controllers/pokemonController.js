@@ -1,4 +1,3 @@
-const sequelize = require('../config/db');
 const {Pokemon, Type} = require('../models');
 
 exports.getAllPokemons = async (req, res) => {
@@ -56,3 +55,17 @@ exports.getAllTypes = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los types' });
     }
 };
+
+exports.getPokemonById = async(req, res)=>{
+    try{
+        const {id} = req.params.id;
+        const pokemon = await Pokemon.findOne({where:{id}});
+        if (!pokemon) return res.status(401).send('Pokemon not found');
+        res.json(pokemon);
+
+
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Error el obtener el pokemon')
+    }
+}
