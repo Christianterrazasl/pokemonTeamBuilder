@@ -26,11 +26,6 @@ const PokemonXTeam = sequelize.define('pokemonXTeam', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    position:{
-        type: DataTypes.INTEGER,
-        allowNull: true
-    }
-
 },{
     timestamps: false,
     freezeTableName: true

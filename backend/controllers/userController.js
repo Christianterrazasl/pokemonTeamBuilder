@@ -41,7 +41,9 @@ exports.loginUser = async (req, res) => {
         if(!isPasswordValid) return res.status(400).json({error: 'La contraseña es incorrecta'});
 
         const tokenEntity = await AuthToken.create({token: generateToken(user.id), userId: user.id});
-        return res.json({token:tokenEntity.token}); 
+        const userdata = user.toJSON();
+        delete userdata.password;
+        return res.json({token:tokenEntity.token, user:userdata}); 
     }
     catch(error){
         console.error('Error al iniciar sesion:', error);

@@ -1,4 +1,6 @@
-const {Pokemon, Type} = require('../models');
+const {Pokemon, Type, Nature, Ability} = require('../models');
+const { Op } = require('sequelize');
+
 
 exports.getAllPokemons = async (req, res) => {
     try{
@@ -58,7 +60,7 @@ exports.getAllTypes = async (req, res) => {
 
 exports.getPokemonById = async(req, res)=>{
     try{
-        const {id} = req.params.id;
+        const {id} = req.params;
         const pokemon = await Pokemon.findOne({where:{id}});
         if (!pokemon) return res.status(401).send('Pokemon not found');
         res.json(pokemon);
@@ -67,5 +69,65 @@ exports.getPokemonById = async(req, res)=>{
     }catch(error){
         console.error(error);
         res.status(500).send('Error el obtener el pokemon')
+    }
+}
+
+exports.getAllNatures = async (req, res) => {
+    try {
+        const natures = await Nature.findAll();
+        res.json(natures);
+    } catch (error) {
+        console.error('Error al obtener las natures:', error);
+        res.status(500).json({ error: 'Error al obtener las natures' });
+    }
+};
+
+exports.createNature = async (req, res) => {
+    try {
+        const { name, description } = req.body;
+        const nature = await Nature.create({ name, description });
+        res.json(nature);
+    } catch (error) {
+        console.error('Error al crear la nature:', error);
+        res.status(500).json({ error: 'Error al crear la nature' });
+    }
+}
+
+exports.getAllAbilities = async (req, res) => {
+    try {
+        const abilities = await Ability.findAll();
+        res.json(abilities);
+    } catch (error) {
+        console.error('Error al obtener las abilities:', error);
+        res.status(500).json({ error: 'Error al obtener las abilities' });
+    }
+};
+
+exports.createAbility = async (req, res) => {
+    try {
+        const { name, description } = req.body;
+        const ability = await Ability.create({ name, description });
+        res.json(ability);
+    } catch (error) {
+        console.error('Error al crear la ability:', error);
+        res.status(500).json({ error: 'Error al crear la ability' });
+    }
+}
+
+exports.getPokemonsByName = async (req, res) => {
+    try {
+        const { name } = req.params;
+        const pokemons = await Pokemon.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${name}%`
+                }
+            }
+        });
+        if (!pokemons) return res.status(404).send('Pokemon not found');
+        res.json(pokemons);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener el pokemon');
     }
 }

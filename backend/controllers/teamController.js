@@ -14,13 +14,40 @@ exports.createTeam = async (req,res)=>{
 
 exports.getTeamsByUserId = async (req,res)=>{
     try{
-        const {userId} = req.user.id;
-        const teams = await Team.findAll({where:{userId}, include:{model:PokemonXTeam}});
+        const userId = req.user.id;
+        
+        const teams = await Team.findAll({where:{userId}, include:{model:PokemonXTeam, include:{model:Pokemon}}});
         res.json(teams);
         
     }catch(error){
         console.error(error);
         res.status(500).send('Error al obtener teams');
+    }
+}
+
+exports.addPokemonToTeam = async (req,res)=>{
+    try{
+        const user = req.user;
+        const {teamId, pokemonId, alias, objectId, natureId, abilityId} = req.body;
+        if(!teamId || !pokemonId){
+            return res.status(400).send('TeamId y pokemonId son requeridos');
+        }
+        const team = await Team.findByPk(teamId);
+        if(!team){
+            return res.status(404).send('Team not found');
+        }
+        const pokemon = await Pokemon.findByPk(pokemonId);
+        if(!pokemon){
+            return res.status(404).send('Pokemon not found');
+        }
+        if(user.id !== team.userId){
+            return res.status(401).send('No tienes permiso para agregar pokemon a este team');
+        }
+        const pokemonXTeam = await PokemonXTeam.create({teamId, pokemonId, alias, objectId, natureId, abilityId});
+        res.json(pokemonXTeam);
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Error al agregar pokemon a team');
     }
 }
 
