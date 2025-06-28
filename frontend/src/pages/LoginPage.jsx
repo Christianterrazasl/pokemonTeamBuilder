@@ -58,7 +58,7 @@ const LoginPage = () => {
                 <input type="password" className='border border-gray-300 rounded-lg p-2 w-full' value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <div className='flex justify-center items-center gap-3'>
                     <button className='bg-blue-800 text-white p-3 rounded-lg mt-5 cursor-pointer' onClick={handleSubmit}>Login</button>
-                    <button className='bg-gray-500 text-white p-3 rounded-lg mt-5 cursor-pointer'>Register</button>
+                    <button className='bg-gray-500 text-white p-3 rounded-lg mt-5 cursor-pointer' onClick={()=>navigate('/register')}>Register</button>
                 </div>
                 {errorEmpty && <p className='text-red-500 mt-5'>Username o contraseña vacio</p>}
                 {errorLogin && <p className='text-red-500 mt-5'>Username o contraseña incorrecto</p>}

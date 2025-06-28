@@ -29,7 +29,7 @@ PokemonXAbility.belongsTo(Ability, {foreignKey: 'abilityId'});
 // Type.hasMany(PokemonXType, {foreignKey: 'typeId'});
 // PokemonXType.belongsTo(Type, {foreignKey: 'typeId'});
 
-Team.hasMany(PokemonXTeam, {foreignKey: 'teamId'});
+Team.hasMany(PokemonXTeam, {foreignKey: 'teamId', onDelete: 'CASCADE'});
 PokemonXTeam.belongsTo(Team, {foreignKey: 'teamId'});
 
 Pokemon.hasMany(PokemonXTeam, {foreignKey: 'pokemonId'});
@@ -38,7 +38,7 @@ PokemonXTeam.belongsTo(Pokemon, {foreignKey: 'pokemonId'});
 Attack.hasMany(PokemonXTeamXAttack, {foreignKey: 'attackId'});
 PokemonXTeamXAttack.belongsTo(Attack, {foreignKey: 'attackId'});
 
-PokemonXTeam.hasMany(PokemonXTeamXAttack, {foreignKey: 'pokemonXTeamId'});
+PokemonXTeam.hasMany(PokemonXTeamXAttack, {foreignKey: 'pokemonXTeamId', onDelete: 'CASCADE'});
 PokemonXTeamXAttack.belongsTo(PokemonXTeam, {foreignKey: 'pokemonXTeamId'});
 
 Pokemon.hasMany(AttackXPokemon, {foreignKey: 'pokemonId'});
@@ -53,8 +53,8 @@ Team.belongsTo(User, {foreignKey: 'userId'});
 Attack.belongsTo(Type, {foreignKey: 'typeId'});
 Type.hasMany(Attack, {foreignKey: 'typeId'});
 
-PokemonXTeam.hasOne(PokemonIV, {foreignKey: 'pokemonXTeamId'});
-PokemonXTeam.hasOne(PokemonEV, {foreignKey: 'pokemonXTeamId'});
+PokemonXTeam.hasOne(PokemonIV, {foreignKey: 'pokemonXTeamId', onDelete: 'CASCADE'});
+PokemonXTeam.hasOne(PokemonEV, {foreignKey: 'pokemonXTeamId', onDelete: 'CASCADE'});
 
 PokemonXTeam.belongsTo(Nature, { foreignKey: 'natureId' });
 Nature.hasMany(PokemonXTeam, { foreignKey: 'natureId' });

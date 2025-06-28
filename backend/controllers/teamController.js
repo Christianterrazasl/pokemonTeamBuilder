@@ -51,3 +51,19 @@ exports.addPokemonToTeam = async (req,res)=>{
     }
 }
 
+exports.deleteTeam = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { teamId } = req.params;
+        const team = await Team.findOne({ where: { id: teamId, userId } });
+        if (!team) {
+            return res.status(404).send('Team no encontrado o no tienes permiso para eliminarlo');
+        }
+        await team.destroy();
+        res.status(200).send('Team eliminado exitosamente');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar team');
+    }
+}
+

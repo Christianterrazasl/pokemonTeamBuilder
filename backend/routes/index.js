@@ -14,6 +14,7 @@ router.get('/pokemon/search/:name', pokemonController.getPokemonsByName);
 router.get('/team', requireAuth, teamController.getTeamsByUserId);
 router.post('/team', requireAuth, teamController.createTeam);
 router.post('/team/pokemon', requireAuth, teamController.addPokemonToTeam);
+router.delete('/team/:teamId', requireAuth, teamController.deleteTeam);
 
 router.post('/type', upload.single('imageUrl'), pokemonController.createType);
 router.get('/type', pokemonController.getAllTypes);
