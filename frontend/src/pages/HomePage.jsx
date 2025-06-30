@@ -62,7 +62,7 @@ const HomePage = ({}) => {
   return (
     
     <div className='min-h-screen'>
-        <div className='fixed top-0 left-0 h-screen w-[250px] bg-red-800 xl:w-[300px] flex flex-col justify-start items-center pt-10 px-5'>
+        <div className='fixed top-0 left-0 h-screen w-[250px] bg-red-800 xl:w-[300px] flex flex-col justify-start items-center pt-10 px-5 overflow-y-scroll'>
             <button className='bg-black p-2 text-xl text-white rounded-xl mb-5 self-start cursor-pointer' onClick={handleLogout}>Logout</button>
             <div className='bg-blue-800 p-5 rounded-xl'>
                 <h1 className='text-4xl font-bold text-yellow-500'>Pokemon</h1>
@@ -93,7 +93,7 @@ const HomePage = ({}) => {
                 ) : (
                     <p className='text-xl font-bold text-white'>No tienes equipos</p>
                 )}
-                <button className='text-xl bg-gray-200 rounded-xl p-2 cursor-pointer mt-5' onClick={()=>setPanel('crearTeam')}>Agregar equipo</button>
+                <button className='text-xl bg-gray-200 rounded-xl p-2 cursor-pointer my-8' onClick={()=>setPanel('crearTeam')}>Agregar equipo</button>
             </div>
         </div>
         <div className='ml-[250px] xl:ml-[300px] min-h-screen'>

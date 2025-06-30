@@ -75,7 +75,7 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
     }
 
   return (
-    <div className='h-screen flex flex-col justify-start items-start p-10'>
+    <div className='h-screen flex flex-col justify-start items-start p-5'>
         <div className='flex flex-col justify-start items-start gap-5 w-[15vw]'>
             <div className='flex justify-start items-center gap-5 relative'>
                 <label>Pokemon:</label>
@@ -102,7 +102,7 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
               )}
             </div>
           </div>
-          <div className='flex w-full p-5 items-center justify-between gap-5'>
+          <div className='flex w-full items-center justify-between gap-5'>
             <div>
               <label>Alias: </label>
               <input type="text" className='border border-gray-500 rounded-lg p-2' value={alias} onChange={(e) => {setAlias(e.target.value);}}/>
@@ -135,7 +135,7 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
               </select>
             </div>
           </div>
-          <div className='flex w-full p-5 items-center justify-center gap-5 bg-blue-800 rounded-lg'>
+          <div className='flex w-full p-5 mt-2 items-center justify-center gap-5 bg-blue-800 rounded-lg'>
 
           </div>
           
