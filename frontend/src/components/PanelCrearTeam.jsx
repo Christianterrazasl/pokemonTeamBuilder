@@ -41,8 +41,8 @@ const PanelCrearTeam = ({finishCreate}) => {
         <h1 className='text-3xl'>Crea un equipo!</h1>
         <label>Nombre del team:</label>
         <input type="text" className='border border-gray-300 rounded-lg p-2' value={teamName} onChange={(e)=>setTeamName(e.target.value)}/>
-        <button className='bg-blue-200 p-3 rounded-xl' onClick={handleCreateTeam}>Crear team</button>
-        <button className='bg-gray-200 p-3 rounded-xl' onClick={finishCreate}>Cancelar</button>
+        <button className='bg-blue-200 p-3 rounded-xl cursor-pointer' onClick={handleCreateTeam}>Crear team</button>
+        <button className='bg-gray-200 p-3 rounded-xl cursor-pointer' onClick={finishCreate}>Cancelar</button>
         {errorEmpty && <p className='text-red-500'>El nombre del equipo no puede estar vacío</p>}
 
     </div>

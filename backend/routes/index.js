@@ -15,6 +15,8 @@ router.get('/team', requireAuth, teamController.getTeamsByUserId);
 router.post('/team', requireAuth, teamController.createTeam);
 router.post('/team/pokemon', requireAuth, teamController.addPokemonToTeam);
 router.delete('/team/:teamId', requireAuth, teamController.deleteTeam);
+router.delete('/team/pokemon/:pokemonXTeamId', requireAuth, teamController.removePokemonFromTeam);
+router.get('/team/:teamId', requireAuth, teamController.getTeamById);
 
 router.post('/type', upload.single('imageUrl'), pokemonController.createType);
 router.get('/type', pokemonController.getAllTypes);
@@ -24,14 +26,15 @@ router.post('/item', upload.single('imageUrl'), itemController.createItem);
 
 router.get('/ability', pokemonController.getAllAbilities);
 router.post('/ability', pokemonController.createAbility);
+router.post('/ability/pokemon', pokemonController.addAbilityToPokemon);
+router.get('/ability/pokemon/:pokemonId', pokemonController.getAbilitiesByPokemonId);
 
 router.get('/nature', pokemonController.getAllNatures);
 router.post('/nature', pokemonController.createNature);
 
-
-
 router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
 router.get('/users', userController.getAllUsers);
+
 
 module.exports = router;

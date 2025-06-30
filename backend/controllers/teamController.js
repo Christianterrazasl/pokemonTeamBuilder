@@ -67,3 +67,35 @@ exports.deleteTeam = async (req, res) => {
     }
 }
 
+exports.removePokemonFromTeam = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { pokemonXTeamId } = req.params;
+        const pokemonXTeam = await PokemonXTeam.findOne({ where: { id: pokemonXTeamId }, include: { model: Team } });
+        console.log(pokemonXTeam);
+        if (!pokemonXTeam || pokemonXTeam.team.userId !== userId) {
+            return res.status(404).send('PokemonXTeam no encontrado o no tienes permiso para eliminarlo');
+        }
+        await pokemonXTeam.destroy();
+        res.status(200).send('PokemonXTeam eliminado exitosamente');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar PokemonXTeam');
+    }
+}
+
+exports.getTeamById = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { teamId } = req.params;
+        const team = await Team.findOne({ where: { id: teamId, userId }, include:{model:PokemonXTeam, include:{model:Pokemon}} });
+        
+        if (!team) {
+            return res.status(404).send('Team no encontrado o no tienes permiso para verlo');
+        }
+        res.json(team);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener team');
+    }
+}

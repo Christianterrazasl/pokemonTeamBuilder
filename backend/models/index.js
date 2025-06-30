@@ -23,12 +23,6 @@ PokemonXAbility.belongsTo(Pokemon, {foreignKey: 'pokemonId'});
 Ability.hasMany(PokemonXAbility, {foreignKey: 'abilityId'});
 PokemonXAbility.belongsTo(Ability, {foreignKey: 'abilityId'});
 
-// Pokemon.hasMany(PokemonXType, {foreignKey: 'pokemonId'});
-// PokemonXType.belongsTo(Pokemon, {foreignKey: 'pokemonId'});
-
-// Type.hasMany(PokemonXType, {foreignKey: 'typeId'});
-// PokemonXType.belongsTo(Type, {foreignKey: 'typeId'});
-
 Team.hasMany(PokemonXTeam, {foreignKey: 'teamId', onDelete: 'CASCADE'});
 PokemonXTeam.belongsTo(Team, {foreignKey: 'teamId'});
 
@@ -61,6 +55,9 @@ Nature.hasMany(PokemonXTeam, { foreignKey: 'natureId' });
 
 PokemonXTeam.belongsTo(Item, { foreignKey: 'itemId' });
 Item.hasMany(PokemonXTeam, { foreignKey: 'itemId' });
+
+Pokemon.belongsTo(Type, { foreignKey: 'typeId', as: 'primaryType' });
+Pokemon.belongsTo(Type, { foreignKey: 'type2Id', as: 'secondaryType' });
 
 
 

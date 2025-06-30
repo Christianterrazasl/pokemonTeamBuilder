@@ -1,4 +1,4 @@
-const {Pokemon, Type, Nature, Ability} = require('../models');
+const {Pokemon, Type, Nature, Ability, PokemonXAbility} = require('../models');
 const { Op } = require('sequelize');
 
 
@@ -61,7 +61,8 @@ exports.getAllTypes = async (req, res) => {
 exports.getPokemonById = async(req, res)=>{
     try{
         const {id} = req.params;
-        const pokemon = await Pokemon.findOne({where:{id}});
+        const pokemon = await Pokemon.findOne({where:{id}, 
+            include: [{model: Type, as: 'primaryType'}, {model: Type, as: 'secondaryType'} ]});
         if (!pokemon) return res.status(401).send('Pokemon not found');
         res.json(pokemon);
 
@@ -114,6 +115,41 @@ exports.createAbility = async (req, res) => {
     }
 }
 
+exports.addAbilityToPokemon = async (req, res) => {
+    try {
+        const { pokemonId, abilityId } = req.body;
+        const pokemon = await Pokemon.findByPk(pokemonId);
+        const ability = await Ability.findByPk(abilityId);
+        if (!pokemon || !ability) {
+            return res.status(404).json({ error: 'Pokemon o habilidad no encontrados' });
+        }
+        const pokemonXAbility = await PokemonXAbility.create({ pokemonId, abilityId });
+        res.json(pokemonXAbility);
+        
+    } catch (error) {
+        console.error('Error al agregar la habilidad al pokemon:', error);
+        res.status(500).json({ error: 'Error al agregar la habilidad al pokemon' });
+    }
+}
+
+exports.getAbilitiesByPokemonId = async (req, res) => {
+    try {
+        const { pokemonId } = req.params;
+        const abilities = await PokemonXAbility.findAll({
+            where: { pokemonId },
+            include: {
+                model: Ability,
+                as: 'ability'
+            }
+        });
+        if (!abilities) return res.status(404).send('No abilities found for this pokemon');
+        res.json(abilities);
+    }catch (error) {
+        console.error('Error al obtener las habilidades del pokemon:', error);
+        res.status(500).json({ error: 'Error al obtener las habilidades del pokemon' });
+    }
+}
+
 exports.getPokemonsByName = async (req, res) => {
     try {
         const { name } = req.params;
@@ -122,6 +158,10 @@ exports.getPokemonsByName = async (req, res) => {
                 name: {
                     [Op.like]: `%${name}%`
                 }
+            },
+            include:{
+                model: Type,
+                as: 'primaryType',
             }
         });
         if (!pokemons) return res.status(404).send('Pokemon not found');
