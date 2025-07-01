@@ -26,6 +26,22 @@ const PokemonXTeam = sequelize.define('pokemonXTeam', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    attack1Id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    attack2Id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    attack3Id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    attack4Id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    }
 },{
     timestamps: false,
     freezeTableName: true

@@ -18,7 +18,7 @@ const Attack = sequelize.define('attack', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    class:{
+    category:{
         type: DataTypes.STRING,
         allowNull: false
     },

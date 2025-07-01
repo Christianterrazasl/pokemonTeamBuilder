@@ -36,5 +36,9 @@ router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
 router.get('/users', userController.getAllUsers);
 
+router.post('/attack', pokemonController.createAttack);
+router.get('/attack', pokemonController.getAllAttacks);
+router.post('/attack/pokemon', pokemonController.makePokemonAbleToUseAttack);
+router.get('/attack/pokemon/:pokemonId', pokemonController.getAttacksByPokemonId);
 
 module.exports = router;

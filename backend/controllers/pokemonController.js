@@ -1,4 +1,4 @@
-const {Pokemon, Type, Nature, Ability, PokemonXAbility} = require('../models');
+const {Pokemon, Type, Nature, Ability, PokemonXAbility, Attack, AttackXPokemon} = require('../models');
 const { Op } = require('sequelize');
 
 
@@ -169,5 +169,63 @@ exports.getPokemonsByName = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al obtener el pokemon');
+    }
+}
+
+exports.createAttack = async (req, res) => {
+    try {
+        const { name, description, power, accuracy, category, typeId } = req.body;
+        const attack = await Attack.create({ name, description, power, accuracy, category, typeId });
+        res.json(attack);
+    }catch (error) {
+        console.error('Error al crear el ataque:', error);
+        res.status(500).json({ error: 'Error al crear el ataque' });
+    }
+}
+
+exports.makePokemonAbleToUseAttack = async (req, res) => {
+    try {
+        const { pokemonId, attackId } = req.body;
+        const pokemon = await Pokemon.findByPk(pokemonId);
+        const attack = await Attack.findByPk(attackId);
+        if (!pokemon || !attack) {
+            return res.status(404).json({ error: 'Pokemon o ataque no encontrados' });
+        }
+        const attackXPokemon = await AttackXPokemon.create({ pokemonId, attackId });
+        res.json(attackXPokemon);
+    } catch (error) {
+        console.error('Error al agregar el ataque al pokemon:', error);
+        res.status(500).json({ error: 'Error al agregar el ataque al pokemon' });
+    }
+}
+
+exports.getAllAttacks = async (req, res) => {
+    try {
+        const attacks = await Attack.findAll();
+        res.json(attacks);
+    } catch (error) {
+        console.error('Error al obtener los ataques:', error);
+        res.status(500).json({ error: 'Error al obtener los ataques' });
+    }
+}
+
+exports.getAttacksByPokemonId = async (req, res) => {
+    try {
+        const { pokemonId } = req.params;
+        const pokemon = await Pokemon.findByPk(pokemonId);
+        if (!pokemon) {
+            return res.status(404).json({ error: 'Pokemon no encontrado' });
+        }
+        const attacks = await AttackXPokemon.findAll({
+            where: { pokemonId },
+            include: {
+                model: Attack,
+                as: 'attack'
+            }
+        });
+        res.json(attacks);
+    } catch (error) {
+        console.error('Error al obtener los ataques del pokemon:', error);
+        res.status(500).json({ error: 'Error al obtener los ataques del pokemon' });
     }
 }

@@ -28,7 +28,7 @@ exports.getTeamsByUserId = async (req,res)=>{
 exports.addPokemonToTeam = async (req,res)=>{
     try{
         const user = req.user;
-        const {teamId, pokemonId, alias, objectId, natureId, abilityId} = req.body;
+        const {teamId, pokemonId, alias, objectId, natureId, abilityId, attack1Id, attack2Id, attack3Id, attack4Id, ivs, evs} = req.body;
         if(!teamId || !pokemonId){
             return res.status(400).send('TeamId y pokemonId son requeridos');
         }
@@ -43,7 +43,7 @@ exports.addPokemonToTeam = async (req,res)=>{
         if(user.id !== team.userId){
             return res.status(401).send('No tienes permiso para agregar pokemon a este team');
         }
-        const pokemonXTeam = await PokemonXTeam.create({teamId, pokemonId, alias, objectId, natureId, abilityId});
+        const pokemonXTeam = await PokemonXTeam.create({teamId, pokemonId, alias, objectId, natureId, abilityId, attack1Id, attack2Id, attack3Id, attack4Id});
         res.json(pokemonXTeam);
     }catch(error){
         console.error(error);
