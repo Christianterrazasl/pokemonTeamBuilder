@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 
 
-const PanelEditarTeam = ({teamId, fetchTeams, setPanel, setSelectedPokemonId}) => {
+const PanelEditarTeam = ({teamId, fetchTeams, setPanel, setSelectedPokemonXTeamId}) => {
 
   const [team, setTeam] = useState({});
 
@@ -55,7 +55,7 @@ const PanelEditarTeam = ({teamId, fetchTeams, setPanel, setSelectedPokemonId}) =
               <h2 className='text-lg'>{pokemonXTeam.pokemon.name}</h2>
               <div className='flex items-center justify-center mt-2 gap-10'>
                 <button className='text-3xl cursor-pointer' onClick={()=>{handleRemovePokemonFromTeam(pokemonXTeam.id)}}><MdDelete/></button>
-                <button className='text-3xl cursor-pointer'><MdModeEdit/></button>
+                <button className='text-3xl cursor-pointer' onClick={()=>{setSelectedPokemonXTeamId(pokemonXTeam.id); setPanel('editarPokemon')}}><MdModeEdit/></button>
               </div>
             </div>
           ))}

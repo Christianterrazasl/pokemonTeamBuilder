@@ -7,7 +7,6 @@ const AttackXPokemon = require('./attackXPokemon');
 const Team = require('./team');
 const Item = require('./item');
 const Nature = require('./nature');
-const PokemonXTeamXAttack = require('./pokemonXTeamXAttack');
 const PokemonIV = require('./pokemonIV');
 const PokemonEV = require('./pokemonEV');
 const User = require('./user');
@@ -29,11 +28,7 @@ PokemonXTeam.belongsTo(Team, {foreignKey: 'teamId'});
 Pokemon.hasMany(PokemonXTeam, {foreignKey: 'pokemonId'});
 PokemonXTeam.belongsTo(Pokemon, {foreignKey: 'pokemonId'});
 
-Attack.hasMany(PokemonXTeamXAttack, {foreignKey: 'attackId'});
-PokemonXTeamXAttack.belongsTo(Attack, {foreignKey: 'attackId'});
 
-PokemonXTeam.hasMany(PokemonXTeamXAttack, {foreignKey: 'pokemonXTeamId', onDelete: 'CASCADE'});
-PokemonXTeamXAttack.belongsTo(PokemonXTeam, {foreignKey: 'pokemonXTeamId'});
 
 Pokemon.hasMany(AttackXPokemon, {foreignKey: 'pokemonId'});
 AttackXPokemon.belongsTo(Pokemon, {foreignKey: 'pokemonId'});
@@ -83,12 +78,10 @@ module.exports = {
     Team,
     Item,
     Nature,
-    PokemonXTeamXAttack,
     PokemonIV,
     PokemonEV,
     User,
     PokemonXTeam,
     PokemonXAbility,
     AuthToken,
-    // PokemonXType   
 };

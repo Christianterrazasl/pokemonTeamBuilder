@@ -12,7 +12,7 @@ const HomePage = ({}) => {
   const[teams, setTeams] = useState([]);
   const [panel, setPanel] = useState(null); // 'editarTeam' || 'crearTeam' || 'agregarPokemon' || 'editarPokemon'
   const [selectedTeamId, setSelectedTeamId] = useState(null);
-  const [selectedPokemonId, setSelectedPokemonId] = useState(null);
+  const [selectedPokemonXTeamId, setSelectedPokemonXTeamId] = useState(null);
 
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user'));
@@ -101,9 +101,9 @@ const HomePage = ({}) => {
               <h1 className='text-3xl'>Selecciona un equipo!</h1>
             </div>)}
           {panel == 'crearTeam' && <PanelCrearTeam finishCreate={()=>{setPanel(null); fetchTeams();}}/>}
-          {panel == 'editarTeam' && <PanelEditarTeam teamId={selectedTeamId} fetchTeams={fetchTeams} setPanel={setPanel} setSelectedPokemonId={setSelectedPokemonId}/>}
-          {panel == 'agregarPokemon' && <PanelPokemonForm pokemonTeamId={selectedTeamId} setPanel={setPanel}/>}
-          {panel == 'editarPokemon' && <PanelPokemonForm pokemonId={selectedPokemonId} setPanel={setPanel}/>}
+          {panel == 'editarTeam' && <PanelEditarTeam teamId={selectedTeamId} fetchTeams={fetchTeams} setPanel={setPanel} setSelectedPokemonXTeamId={setSelectedPokemonXTeamId}/>}
+          {panel == 'agregarPokemon' && <PanelPokemonForm teamId={selectedTeamId} setPanel={setPanel} setSelectedTeamId={setSelectedTeamId} fetchTeams={fetchTeams}/>}
+          {panel == 'editarPokemon' && <PanelPokemonForm teamId={selectedTeamId} pokemonXTeamId={selectedPokemonXTeamId} setPanel={setPanel} setSelectedTeamId={setSelectedTeamId} fetchTeams={fetchTeams}/>}
         </div>
         </div>
         

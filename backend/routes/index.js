@@ -17,6 +17,9 @@ router.post('/team/pokemon', requireAuth, teamController.addPokemonToTeam);
 router.delete('/team/:teamId', requireAuth, teamController.deleteTeam);
 router.delete('/team/pokemon/:pokemonXTeamId', requireAuth, teamController.removePokemonFromTeam);
 router.get('/team/:teamId', requireAuth, teamController.getTeamById);
+router.get('/team/pokemon/:pokemonXTeamId', requireAuth, teamController.getPokemonXTeamById);
+router.put('/team/pokemon/:pokemonXTeamId', requireAuth, teamController.updatePokemonXTeam);
+
 
 router.post('/type', upload.single('imageUrl'), pokemonController.createType);
 router.get('/type', pokemonController.getAllTypes);

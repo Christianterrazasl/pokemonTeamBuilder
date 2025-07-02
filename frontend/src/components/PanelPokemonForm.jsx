@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { use } from 'react'
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 
-const PanelPokemonForm = ({pokemonTeamId}) => {
+const PanelPokemonForm = ({teamId, pokemonXTeamId, setPanel, setSelectedTeamId, fetchTeams}) => {
 
     const [alias, setAlias] = useState('');
-    const [errorEmpty, setErrorEmpty] = useState(false);
+    const [error, setError] = useState(false);
     const [pokemonsSearched, setPokemonsSearched] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedPokemonId, setSelectedPokemonId] = useState(null);
@@ -25,6 +25,33 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
     const [attack4Id, setAttack4Id] = useState(null);
 
     useEffect(() => {
+      if (pokemonXTeamId) {
+      axios.get(`http://localhost:3000/api/team/pokemon/${pokemonXTeamId}`, {
+      headers: { Authorization: localStorage.getItem('token') }
+    })
+    .then(response => {
+      const data = response.data;
+      setAlias(data.alias || '');
+      setSelectedPokemonId(data.pokemonId);
+      setSelectedNatureId(data.natureId || null);
+      setSelectedItemId(data.objectId || null);
+      setSelectedAbilityId(data.abilityId || null);
+      setPokemonIvs(data.pokemonIV || {hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0});
+      setPokemonEvs(data.pokemonEV || {hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0});
+      setAttack1Id(data.attack1Id || null);
+      setAttack2Id(data.attack2Id || null);
+      setAttack3Id(data.attack3Id || null);
+      setAttack4Id(data.attack4Id || null);
+    })
+    .catch(error => {
+      console.error('Error fetching pokemonXTeam:', error);
+    });
+  }
+
+    },[pokemonXTeamId]);
+
+
+    useEffect(() => {
       if (selectedPokemonId) {
         axios.get(`http://localhost:3000/api/ability/pokemon/${selectedPokemonId}`)
         .then((response) => {
@@ -33,6 +60,15 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
         .catch((error) => {
           console.log(error);
         });
+
+        axios.get(`http://localhost:3000/api/attack/pokemon/${selectedPokemonId}`)
+        .then((response) => {
+          setPokemonAbleAttacks(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       }
     },[selectedPokemonId]);
 
@@ -88,6 +124,59 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
       return isHP ? value + 110 : value + 5;
     }
 
+    const handleSubmit = async () => {
+
+
+      if(!selectedPokemonId || !alias){
+        setError(true);
+        return;
+      }
+      const payload = {
+        teamId,
+        pokemonId: selectedPokemonId,
+        alias,
+        objectId: selectedItemId,
+        natureId: selectedNatureId,
+        abilityId: selectedAbilityId,
+        attack1Id,
+        attack2Id,
+        attack3Id,
+        attack4Id,
+        ivs: pokemonIvs,
+        evs: pokemonEvs
+      }
+
+      if(pokemonXTeamId){
+
+        axios.put(`http://localhost:3000/api/team/pokemon/${pokemonXTeamId}`, payload, {headers: {Authorization: localStorage.getItem('token')}})
+        .then(response => {
+          console.log(response.data);
+          setSelectedTeamId(teamId);
+          setPanel('editarTeam');
+          fetchTeams();
+          setError(false);
+        })
+        .catch(error => {
+          console.error(error);
+          setError(true);
+        });
+
+      }else{
+        axios.post('http://localhost:3000/api/team/pokemon', payload, {headers: {Authorization: localStorage.getItem('token')}})
+        .then(response => {
+          console.log(response.data);
+          setSelectedTeamId(teamId);
+          setPanel('editarTeam');
+          fetchTeams();
+          setError(false);
+        })
+        .catch(error => {
+          console.error(error);
+          setError(true);
+        });
+      }
+    }
+
   return (
     <div className='h-screen flex flex-col justify-start items-start p-5'>
         <div className='flex flex-col justify-start items-start gap-5 w-[15vw]'>
@@ -117,7 +206,7 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
             </div>
           </div>
           {pokemon && 
-          <div>
+          <div className='w-full'>
           <div className='flex w-full items-center justify-between gap-5'>
             <div>
               <label>Alias: </label>
@@ -126,7 +215,7 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
             <div>
               <label>Naturaleza: </label>
               <select name="nature" id="nature" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedNatureId(e.target.value);}} value={selectedNatureId}>
-                <option value={null}>Selecciona naturaleza</option>
+                <option value={null}></option>
                 {natures.map((nature)=>(
                   <option key={nature.id} value={nature.id}>{nature.name}</option>)
                   )}
@@ -135,7 +224,7 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
             <div>
               <label>Item: </label>
               <select name="item" id="item" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedItemId(e.target.value);}} value={selectedItemId}>
-                <option value={null}>Selecciona un item</option>
+                <option value={null}></option>
                 {items.map((item)=>(
                   <option key={item.id} value={item.id}>{item.name}</option>
                 ))}
@@ -144,7 +233,7 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
             <div>
               <label>Habilidad: </label>
               <select name="ability" id="ability" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedAbilityId(e.target.value);}} value={selectedAbilityId}>
-                <option value={null}>Selecciona una habilidad</option>
+                <option value={null}></option>
                 {abilities.map((ability)=>(
                   <option key={ability.id} value={ability.id} className='text-black'>{ability.ability.name}</option>
                 ))}
@@ -256,10 +345,40 @@ const PanelPokemonForm = ({pokemonTeamId}) => {
                   </div>
                 </div>
           </div>
-          <div>
+          <div className='p-5'>
             <h1>Attacks</h1>
-                  
+            <div className='flex items-center justify-center gap-5 w-full'>  
+              <select name="attack1" id="attack1" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack1Id(e.target.value);}} value={attack1Id}>
+                <option value={null}>Seleccionar</option>
+                {pokemonAbleAttacks.map((attack) => (
+                  <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
+                ))}
+              </select>
+              <select name="attack2" id="attack2" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack2Id(e.target.value);}} value={attack2Id}>
+                <option value={null}>Seleccionar</option>
+                {pokemonAbleAttacks.map((attack) => (
+                  <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
+                ))}
+              </select><select name="attack3" id="attack3" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack3Id(e.target.value);}} value={attack3Id}>
+                <option value={null}>Seleccionar</option>
+                {pokemonAbleAttacks.map((attack) => (
+                  <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
+                ))}
+              </select><select name="attack4" id="attack4" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack4Id(e.target.value);}} value={attack4Id}>
+                <option value={null}>Seleccionar</option>
+                {pokemonAbleAttacks.map((attack) => (
+                  <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
+                ))}
+              </select>
+              
+            </div>
           </div>
+          <div className='flex items-center justify-center gap-5 w-full'>
+                <button className='bg-blue-500 text-white rounded-lg p-2 cursor-pointer' onClick={handleSubmit}>Guardar</button>
+                <button className='bg-red-500 text-white rounded-lg p-2 cursor-pointer' onClick={() => { setSelectedTeamId(teamId); setPanel('editarTeam')}}>Cancelar</button>
+          </div>
+          {error && <div className='text-red-500'>Error al subir el pokemon, revisa los campos</div>}
+          
         </div>}
     </div>
   )
