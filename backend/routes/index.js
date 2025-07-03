@@ -5,6 +5,7 @@ const teamController = require('../controllers/teamController');
 const itemController = require('../controllers/itemController');
 const requireAuth = require('../middlewares/requireAuth');
 const upload = require('../config/upload');
+const requireAdmin = require('../middlewares/requireAdmin');
 
 router.get('/pokemon', pokemonController.getAllPokemons);
 router.post('/pokemon', upload.single('imageUrl') ,pokemonController.createPokemon);

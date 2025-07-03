@@ -220,7 +220,11 @@ exports.getAttacksByPokemonId = async (req, res) => {
             where: { pokemonId },
             include: {
                 model: Attack,
-                as: 'attack'
+                as: 'attack',
+                include:{
+                    model: Type,
+                    as: 'type'
+                }
             }
         });
         res.json(attacks);

@@ -10,7 +10,7 @@ const Attack = sequelize.define('attack', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    accuarcy: {
+    accuracy: {
         type: DataTypes.INTEGER,
         allowNull: true
     },
