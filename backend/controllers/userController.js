@@ -65,7 +65,7 @@ exports.getAllUsers = async (req, res) => {
 
 exports.giveAdminPrivilleges = async(req, res) => {
     try{
-        const {userId} = req.body;
+        const userId = req.params.userId;
         const user = await User.findByPk(userId);
         if(!user) return res.status(400).json({error: 'El usuario no existe'});
         user.isAdmin = true;
@@ -75,5 +75,35 @@ exports.giveAdminPrivilleges = async(req, res) => {
     }catch{
         console.error('Error al dar privilegios de admin');
         res.status(500).json({error: 'Error al dar privilegios de admin'});
+    }
+}
+
+exports.removeAdminPrivilleges = async(req,res)=>{
+    try{
+        const userId = req.params.userId;
+        const user = await User.findByPk(userId);
+        if(!user) return res.status(400).json({error: 'El usuario no existe'});
+        user.isAdmin = false;
+        await user.save();
+        res.json({message: 'Privilegios de admin quitados correctamente'});
+    }catch(error){
+        console.error('Error al quitar privilegios de admin:', error);
+        res.status(500).json({error: 'Error al quitar privilegios de admin'});
+    }
+}
+
+exports.changeUserPassword = async (req, res) => {
+    try{
+        const userId = req.params.userId;
+        const {newPassword} = req.body;
+        if(!newPassword || newPassword.trim() === '') return res.status(400).json({error: 'La nueva contrasena es requerida'});
+        const user = await User.findByPk(userId);
+        if(!user) return res.status(400).json({error: 'El usuario no existe'}); 
+        user.password = await hashPassword(newPassword);
+        await user.save();
+        res.json({message: 'Contrasena cambiada correctamente'});
+    }catch(error){
+        console.error('Error al cambiar la contrasena:', error);
+        res.status(500).json({error: 'Error al cambiar la contrasena'});
     }
 }

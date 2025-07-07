@@ -150,7 +150,6 @@ const PanelPokemonForm = ({teamId, pokemonXTeamId, setPanel, setSelectedTeamId, 
 
         axios.put(`http://localhost:3000/api/team/pokemon/${pokemonXTeamId}`, payload, {headers: {Authorization: localStorage.getItem('token')}})
         .then(response => {
-          console.log(response.data);
           setSelectedTeamId(teamId);
           setPanel('editarTeam');
           fetchTeams();

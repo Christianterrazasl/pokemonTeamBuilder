@@ -38,7 +38,11 @@ router.post('/nature', pokemonController.createNature);
 
 router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
-router.get('/users', userController.getAllUsers);
+router.get('/user', userController.getAllUsers);
+router.put('/user/admin/give/:userId', requireAuth, requireAdmin, userController.giveAdminPrivilleges);
+router.put('/user/admin/remove/:userId', requireAuth, requireAdmin, userController.removeAdminPrivilleges);
+router.put('/user/password/:userId', requireAuth, requireAdmin, userController.changeUserPassword);
+
 
 router.post('/attack', pokemonController.createAttack);
 router.get('/attack', pokemonController.getAllAttacks);

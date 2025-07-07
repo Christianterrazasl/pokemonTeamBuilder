@@ -110,7 +110,6 @@ exports.removePokemonFromTeam = async (req, res) => {
         const userId = req.user.id;
         const { pokemonXTeamId } = req.params;
         const pokemonXTeam = await PokemonXTeam.findOne({ where: { id: pokemonXTeamId }, include: { model: Team } });
-        console.log(pokemonXTeam);
         if (!pokemonXTeam || pokemonXTeam.team.userId !== userId) {
             return res.status(404).send('PokemonXTeam no encontrado o no tienes permiso para eliminarlo');
         }
