@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
 import NotAuthPage from './pages/NotAuthPage.jsx'
 import PokemonAdminFormPage from './pages/PokemonAdminFormPage.jsx'
+import ItemAdminFormPage from './pages/ItemAdminFormPage.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -20,6 +21,8 @@ createRoot(document.getElementById('root')).render(
         <Route path='/notauth' element={<NotAuthPage />} />
         <Route path='/admin/pokemon/:pokemonId' element={<PokemonAdminFormPage />} />
         <Route path='/admin/pokemon' element={<PokemonAdminFormPage />} />
+        <Route path='/admin/item/:itemId' element={<ItemAdminFormPage />} />
+        <Route path='/admin/item' element={<ItemAdminFormPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

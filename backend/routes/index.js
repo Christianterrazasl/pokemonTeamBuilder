@@ -11,6 +11,7 @@ router.get('/pokemon', pokemonController.getAllPokemons);
 router.post('/pokemon', upload.single('imageUrl') ,pokemonController.createPokemon);
 router.get('/pokemon/:id', pokemonController.getPokemonById);
 router.get('/pokemon/search/:name', pokemonController.getPokemonsByName);
+router.delete('/pokemon/:id', requireAuth,requireAdmin, pokemonController.deletePokemon);
 
 router.get('/team', requireAuth, teamController.getTeamsByUserId);
 router.post('/team', requireAuth, teamController.createTeam);
@@ -27,6 +28,7 @@ router.get('/type', pokemonController.getAllTypes);
 
 router.get('/item', itemController.getAllItems);
 router.post('/item', upload.single('imageUrl'), itemController.createItem);
+router.delete('/item/:id', requireAuth, requireAdmin,itemController.deleteItem);
 
 router.get('/ability', pokemonController.getAllAbilities);
 router.post('/ability', pokemonController.createAbility);

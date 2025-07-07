@@ -1,4 +1,4 @@
-const {Team, User, PokemonXTeam, Pokemon, PokemonEV, PokemonIV} = require('../models');
+const {Team, User, PokemonXTeam, Pokemon, PokemonEV, PokemonIV, Attack, Nature, Ability} = require('../models');
 
 exports.createTeam = async (req,res)=>{
     try{
@@ -28,13 +28,81 @@ exports.getTeamsByUserId = async (req,res)=>{
 exports.addPokemonToTeam = async (req,res)=>{
     try{
         const user = req.user;
-        const {teamId, pokemonId, alias, objectId, natureId, abilityId, attack1Id, attack2Id, attack3Id, attack4Id, ivs, evs} = req.body;
+        let {teamId, pokemonId, alias, objectId, natureId, abilityId, attack1Id, attack2Id, attack3Id, attack4Id, ivs, evs} = req.body;
+        if(!user){
+            return res.status(401).send('No tienes permiso para agregar pokemon a team');
+        }
+        const totalEVs = Number(evs.hp) + Number(evs.attack) + Number(evs.defense) + Number(evs.specialAttack) + Number(evs.specialDefense) + Number(evs.speed);
+        if(totalEVs > 510) {
+            return res.status(400).send('La suma total de EVs no puede superar 510');
+        }
+        if(attack1Id != ''){
+            const attack = await Attack.findByPk(attack1Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack1Id = null;
+        }
+        if(attack2Id != ''){
+            const attack = await Attack.findByPk(attack2Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack2Id = null;
+        }
+        if(attack3Id != ''){
+            const attack = await Attack.findByPk(attack3Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack3Id = null;
+        }
+        if(attack4Id != ''){
+            const attack = await Attack.findByPk(attack4Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack4Id = null;
+        }
+        if(natureId != ''){
+            const nature = await Nature.findByPk(natureId);
+            if(!nature){
+                return res.status(404).send('Nature not found');
+            }
+        }else{
+            natureId = null;
+        }
+        if(abilityId != ''){
+            const ability = await Ability.findByPk(abilityId);
+            if(!ability){
+                return res.status(404).send('Ability not found');
+            }
+        }else{
+            abilityId = null;
+        }
+        if(objectId != ''){
+            const pokemon = await Pokemon.findByPk(objectId);
+            if(!pokemon){
+                return res.status(404).send('Pokemon not found');
+            }
+        }else{
+            objectId = null;
+        }
+
         if(!teamId || !pokemonId){
             return res.status(400).send('TeamId y pokemonId son requeridos');
         }
         const team = await Team.findByPk(teamId);
         if(!team){
             return res.status(404).send('Team not found');
+        }
+        const pokemonXTeams = await PokemonXTeam.findAll({where:{teamId}});
+        if(pokemonXTeams.length >= 6){
+            return res.status(400).send('El team ya tiene 6 pokemons');
         }
         const pokemon = await Pokemon.findByPk(pokemonId);
         if(!pokemon){
@@ -60,8 +128,73 @@ exports.addPokemonToTeam = async (req,res)=>{
 exports.updatePokemonXTeam = async (req, res) => {
     try {
         const userId = req.user.id;
+        if(!userId){
+            return res.status(401).send('No tienes permiso para actualizar pokemonXTeam');
+        }
         const { pokemonXTeamId } = req.params;
-        const { alias, objectId, natureId, abilityId, attack1Id, attack2Id, attack3Id, attack4Id, ivs, evs } = req.body;
+        let { alias, objectId, natureId, abilityId, attack1Id, attack2Id, attack3Id, attack4Id, ivs, evs } = req.body;
+
+        const totalEVs = Number(evs.hp) + Number(evs.attack) + Number(evs.defense) + Number(evs.specialAttack) + Number(evs.specialDefense) + Number(evs.speed);
+        if(totalEVs > 510) {
+            return res.status(400).send('La suma total de EVs no puede superar 510');
+        }
+        if(attack1Id != ''){
+            const attack = await Attack.findByPk(attack1Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack1Id = null;
+        }
+        if(attack2Id != ''){
+            const attack = await Attack.findByPk(attack2Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack2Id = null;
+        }
+        if(attack3Id != ''){
+            const attack = await Attack.findByPk(attack3Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack3Id = null;
+        }
+        if(attack4Id != ''){
+            const attack = await Attack.findByPk(attack4Id);
+            if(!attack){
+                return res.status(404).send('Attack not found');
+            }
+        }else{
+            attack4Id = null;
+        }
+        if(natureId != ''){
+            const nature = await Nature.findByPk(natureId);
+            if(!nature){
+                return res.status(404).send('Nature not found');
+            }
+        }else{
+            natureId = null;
+        }
+        if(abilityId != ''){
+            const ability = await Ability.findByPk(abilityId);
+            if(!ability){
+                return res.status(404).send('Ability not found');
+            }
+        }else{
+            abilityId = null;
+        }
+        if(objectId != ''){
+            const pokemon = await Pokemon.findByPk(objectId);
+            if(!pokemon){
+                return res.status(404).send('Pokemon not found');
+            }
+        }else{
+            objectId = null;
+        }
+
         const pokemonXTeam = await PokemonXTeam.findOne({ where: { id: pokemonXTeamId }, include: { model: Team } });
         if (!pokemonXTeam || pokemonXTeam.team.userId !== userId) {
             return res.status(404).send('PokemonXTeam no encontrado o no tienes permiso para actualizarlo');

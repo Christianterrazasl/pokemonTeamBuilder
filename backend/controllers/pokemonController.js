@@ -233,3 +233,16 @@ exports.getAttacksByPokemonId = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los ataques del pokemon' });
     }
 }
+
+exports.deletePokemon = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const pokemon = await Pokemon.findByPk(id);
+        if (!pokemon) return res.status(404).send('Pokemon not found');
+        await pokemon.destroy();
+        res.send('Pokemon deleted successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar el pokemon');
+    }
+}

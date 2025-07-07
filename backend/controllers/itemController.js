@@ -25,3 +25,16 @@ exports.getAllItems = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los items' });
     }
 }
+
+exports.deleteItem = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const item = await Item.findByPk(id);
+        if (!item) return res.status(404).send('Item not found');
+        await item.destroy();
+        res.send('Item deleted successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar el item');
+    }
+}

@@ -125,6 +125,8 @@ const PanelPokemonForm = ({teamId, pokemonXTeamId, setPanel, setSelectedTeamId, 
     }
 
     const handleSubmit = async () => {
+      console.log(abilities)
+      console.log(selectedAbilityId)
 
 
       if(!selectedPokemonId || !alias){
@@ -213,8 +215,8 @@ const PanelPokemonForm = ({teamId, pokemonXTeamId, setPanel, setSelectedTeamId, 
             </div>
             <div>
               <label>Naturaleza: </label>
-              <select name="nature" id="nature" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedNatureId(e.target.value);}} value={selectedNatureId}>
-                <option value={null}></option>
+              <select name="nature" id="nature" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedNatureId(e.target.value === '' ? null : e.target.value);}} value={selectedNatureId || ''}>
+                <option value=''></option>
                 {natures.map((nature)=>(
                   <option key={nature.id} value={nature.id}>{nature.name}</option>)
                   )}
@@ -222,8 +224,8 @@ const PanelPokemonForm = ({teamId, pokemonXTeamId, setPanel, setSelectedTeamId, 
             </div>
             <div>
               <label>Item: </label>
-              <select name="item" id="item" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedItemId(e.target.value);}} value={selectedItemId}>
-                <option value={null}></option>
+              <select name="item" id="item" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedItemId(e.target.value === '' ? null : e.target.value);}} value={selectedItemId || ''}>
+                <option value=''></option>
                 {items.map((item)=>(
                   <option key={item.id} value={item.id}>{item.name}</option>
                 ))}
@@ -231,10 +233,10 @@ const PanelPokemonForm = ({teamId, pokemonXTeamId, setPanel, setSelectedTeamId, 
             </div>
             <div>
               <label>Habilidad: </label>
-              <select name="ability" id="ability" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedAbilityId(e.target.value);}} value={selectedAbilityId}>
-                <option value={null}></option>
+              <select name="ability" id="ability" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setSelectedAbilityId(e.target.value === '' ? null : e.target.value);}} value={selectedAbilityId || ''}>
+                <option value=''></option>
                 {abilities.map((ability)=>(
-                  <option key={ability.id} value={ability.id} className='text-black'>{ability.ability.name}</option>
+                  <option key={ability.id} value={ability.ability.id} className='text-black'>{ability.ability.name}</option>
                 ))}
               </select>
             </div>
@@ -347,24 +349,26 @@ const PanelPokemonForm = ({teamId, pokemonXTeamId, setPanel, setSelectedTeamId, 
           <div className='p-5'>
             <h1>Attacks</h1>
             <div className='flex items-center justify-center gap-5 w-full'>  
-              <select name="attack1" id="attack1" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack1Id(e.target.value);}} value={attack1Id}>
-                <option value={null}>Seleccionar</option>
+              <select name="attack1" id="attack1" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack1Id(e.target.value === '' ? null : e.target.value);}} value={attack1Id || ''}>
+                <option value=''></option>
                 {pokemonAbleAttacks.map((attack) => (
                   <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
                 ))}
               </select>
-              <select name="attack2" id="attack2" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack2Id(e.target.value);}} value={attack2Id}>
-                <option value={null}>Seleccionar</option>
+              <select name="attack2" id="attack2" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack2Id(e.target.value === '' ? null : e.target.value);}} value={attack2Id || ''}>
+                <option value=''></option>
                 {pokemonAbleAttacks.map((attack) => (
                   <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
                 ))}
-              </select><select name="attack3" id="attack3" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack3Id(e.target.value);}} value={attack3Id}>
-                <option value={null}>Seleccionar</option>
+              </select>
+              <select name="attack3" id="attack3" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack3Id(e.target.value === '' ? null : e.target.value);}} value={attack3Id || ''}>
+                <option value=''></option>
                 {pokemonAbleAttacks.map((attack) => (
                   <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
                 ))}
-              </select><select name="attack4" id="attack4" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack4Id(e.target.value);}} value={attack4Id}>
-                <option value={null}>Seleccionar</option>
+              </select>
+              <select name="attack4" id="attack4" className='border border-gray-500 rounded-lg p-2' onChange={(e) => {setAttack4Id(e.target.value === '' ? null : e.target.value);}} value={attack4Id || ''}>
+                <option value=''></option>
                 {pokemonAbleAttacks.map((attack) => (
                   <option key={attack.attack.id} value={attack.attack.id}>{attack.attack.name}</option>
                 ))}
