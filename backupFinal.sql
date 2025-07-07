@@ -99,10 +99,10 @@ CREATE TABLE public.attack (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
     description character varying(255) NOT NULL,
-    accuarcy integer,
     power integer,
-    class character varying(255) NOT NULL,
-    "typeId" integer NOT NULL
+    "typeId" integer NOT NULL,
+    category character varying(255) NOT NULL,
+    accuracy integer
 );
 
 
@@ -456,7 +456,11 @@ CREATE TABLE public."pokemonXTeam" (
     "objectId" integer,
     "natureId" integer,
     "abilityId" integer,
-    "itemId" integer
+    "itemId" integer,
+    "attack1Id" integer,
+    "attack2Id" integer,
+    "attack3Id" integer,
+    "attack4Id" integer
 );
 
 
@@ -821,6 +825,16 @@ COPY public."AuthToken" (id, token, "userId") FROM stdin;
 5	11f7m99wofwg	1
 6	1zlg01zhm9fm	1
 7	1kmahphery1	1
+8	1ctpsrlh6ivl	1
+9	2fc2mm8uymn5	2
+10	1v5v8g70uena	1
+11	1ypid9bk5sen	1
+12	2iykvn0qjt1g	2
+13	17n2zcnbpdgn	1
+14	3nv6bm5ozv5	3
+15	1ts4b2ph6t9	1
+16	3pzlvyg5v6l	3
+17	1kbay8lbq3qg	1
 \.
 
 
@@ -841,7 +855,14 @@ COPY public.ability (id, name, description) FROM stdin;
 -- Data for Name: attack; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.attack (id, name, description, accuarcy, power, class, "typeId") FROM stdin;
+COPY public.attack (id, name, description, power, "typeId", category, accuracy) FROM stdin;
+1	placaje	golpea con la cabeza	40	3	fisico	\N
+2	ascuas	tira fuego	40	1	especial	\N
+3	pistola agua	tira awa	40	2	especial	\N
+4	golpe karate	pega feisimo	50	4	fisico	\N
+5	fuerza	levanta al enemigo y lo tira	80	3	fisico	\N
+6	gruñido	baja los stats del enemigo	\N	3	especial	\N
+7	reflejo	baja los stats del enemigo	\N	3	especial	100
 \.
 
 
@@ -850,6 +871,22 @@ COPY public.attack (id, name, description, accuarcy, power, class, "typeId") FRO
 --
 
 COPY public."attackXPokemon" (id, "attackId", "pokemonId") FROM stdin;
+1	1	1
+2	1	2
+3	1	3
+4	1	4
+5	1	5
+6	1	6
+7	2	1
+8	6	2
+9	7	2
+10	3	3
+11	6	3
+12	4	4
+13	4	5
+14	4	6
+15	5	5
+16	5	6
 \.
 
 
@@ -868,6 +905,7 @@ COPY public.attribute (id, name, value) FROM stdin;
 COPY public.item (id, name, description, "imageUrl") FROM stdin;
 1	torta	torta de chocolate xd	/uploads/imageUrl-1750744653098-950135131.png
 2	diamante	carisimo bro	/uploads/imageUrl-1750744826634-520864039.png
+3	Item de testeo	descripcion de testeo	/uploads/imageUrl-1751924376405-241913236.png
 \.
 
 
@@ -891,7 +929,8 @@ COPY public.pokemon (id, name, "typeId", "imageUrl", hp, attack, defense, "speci
 3	squirtle	2	/uploads/imageUrl-1750793055628-997395703.png	44	48	65	50	64	43	\N	\N
 4	machop	4	/uploads/imageUrl-1750793560266-459162784.png	70	80	50	35	35	35	\N	\N
 5	machoke	4	/uploads/imageUrl-1750793691784-85433331.png	80	100	70	50	60	45	4	\N
-6	machamp	4	/uploads/imageUrl-1750793804735-680394388.png	90	130	80	65	85	55	4	\N
+6	machamp	4	/uploads/imageUrl-1750793804735-680394388.png	90	130	80	65	85	55	5	\N
+9	kakuna	9	/uploads/imageUrl-1751923423638-123069072.png	2	34	45	56	78	89	\N	9
 \.
 
 
@@ -908,6 +947,11 @@ COPY public."pokemonBaseStats" (id, "pokemonId", "attributeId", value) FROM stdi
 --
 
 COPY public."pokemonEV" (id, "pokemonXTeamId", hp, attack, defense, "specialAttack", "specialDefense", speed) FROM stdin;
+4	22	65	40	44	53	47	78
+7	25	0	10	68	48	58	34
+5	23	55	67	58	63	97	41
+2	20	40	60	44	46	47	77
+1	19	80	44	97	42	83	77
 \.
 
 
@@ -916,6 +960,11 @@ COPY public."pokemonEV" (id, "pokemonXTeamId", hp, attack, defense, "specialAtta
 --
 
 COPY public."pokemonIV" (id, "pokemonXTeamId", hp, attack, defense, "specialAttack", "specialDefense", speed) FROM stdin;
+1	19	4	11	6	13	9	15
+2	20	20	14	30	24	15	25
+5	23	23	14	19	13	17	7
+7	25	31	19	15	31	31	31
+4	22	8	11	10	9	10	6
 \.
 
 
@@ -924,6 +973,14 @@ COPY public."pokemonIV" (id, "pokemonXTeamId", hp, attack, defense, "specialAtta
 --
 
 COPY public."pokemonXAbility" (id, "pokemonId", "abilityId") FROM stdin;
+1	5	3
+2	5	4
+3	5	5
+4	1	4
+5	2	5
+6	4	5
+7	3	2
+8	6	1
 \.
 
 
@@ -931,9 +988,12 @@ COPY public."pokemonXAbility" (id, "pokemonId", "abilityId") FROM stdin;
 -- Data for Name: pokemonXTeam; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."pokemonXTeam" (id, "teamId", "pokemonId", alias, "objectId", "natureId", "abilityId", "itemId") FROM stdin;
-1	1	1	charmandersito	1	1	1	\N
-2	1	2	cachuchin	2	1	4	\N
+COPY public."pokemonXTeam" (id, "teamId", "pokemonId", alias, "objectId", "natureId", "abilityId", "itemId", "attack1Id", "attack2Id", "attack3Id", "attack4Id") FROM stdin;
+23	1	2	Perriyo	2	2	5	\N	1	1	1	1
+22	1	4	pepe	2	1	5	\N	1	1	4	4
+20	1	1	fuegos	2	2	4	\N	1	2	2	2
+25	1	3	tortugona	1	2	2	\N	1	1	1	1
+19	1	5	jc	1	1	3	\N	1	5	4	4
 \.
 
 
@@ -959,6 +1019,9 @@ COPY public."pokemonXType" (id, "pokemonId", "typeId") FROM stdin;
 
 COPY public.team (id, name, "userId") FROM stdin;
 1	team1	1
+11	ddddd	1
+13	aaa	1
+14	team admin xd	3
 \.
 
 
@@ -993,7 +1056,9 @@ COPY public.type (id, name, "imageUrl") FROM stdin;
 --
 
 COPY public."user" (id, username, email, password, "isAdmin") FROM stdin;
-1	pol	pol@test.com	$2b$10$V1ozshpYLNDhu4qWB/j/Gu6qgfjAWaIldg2AZKdU93HUS2ujxhNGS	f
+3	admin	admin@admin.com	$2b$10$EsE/zP8mcbHOOAU.r9VWf.D6Z/Mkc.spWCoGvojmuk/Mxqs49jjYy	t
+1	pol	pol@test.com	$2b$10$V1ozshpYLNDhu4qWB/j/Gu6qgfjAWaIldg2AZKdU93HUS2ujxhNGS	t
+2	aaa	aaa@aaa.com	$2b$10$uEXNVB9XTjd2ZHVV7A91VOc2naQaxVZH0nOhKyQqaQCde6x.TYaPK	f
 \.
 
 
@@ -1001,7 +1066,7 @@ COPY public."user" (id, username, email, password, "isAdmin") FROM stdin;
 -- Name: AuthToken_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."AuthToken_id_seq"', 7, true);
+SELECT pg_catalog.setval('public."AuthToken_id_seq"', 17, true);
 
 
 --
@@ -1015,14 +1080,14 @@ SELECT pg_catalog.setval('public.ability_id_seq', 5, true);
 -- Name: attackXPokemon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."attackXPokemon_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."attackXPokemon_id_seq"', 16, true);
 
 
 --
 -- Name: attack_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.attack_id_seq', 1, false);
+SELECT pg_catalog.setval('public.attack_id_seq', 7, true);
 
 
 --
@@ -1036,7 +1101,7 @@ SELECT pg_catalog.setval('public.attribute_id_seq', 1, false);
 -- Name: item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.item_id_seq', 2, true);
+SELECT pg_catalog.setval('public.item_id_seq', 3, true);
 
 
 --
@@ -1057,21 +1122,21 @@ SELECT pg_catalog.setval('public."pokemonBaseStats_id_seq"', 1, false);
 -- Name: pokemonEV_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."pokemonEV_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."pokemonEV_id_seq"', 13, true);
 
 
 --
 -- Name: pokemonIV_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."pokemonIV_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."pokemonIV_id_seq"', 13, true);
 
 
 --
 -- Name: pokemonXAbility_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."pokemonXAbility_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."pokemonXAbility_id_seq"', 8, true);
 
 
 --
@@ -1085,7 +1150,7 @@ SELECT pg_catalog.setval('public."pokemonXTeamXAttack_id_seq"', 1, false);
 -- Name: pokemonXTeam_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."pokemonXTeam_id_seq"', 2, true);
+SELECT pg_catalog.setval('public."pokemonXTeam_id_seq"', 31, true);
 
 
 --
@@ -1099,14 +1164,14 @@ SELECT pg_catalog.setval('public."pokemonXType_id_seq"', 1, false);
 -- Name: pokemon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.pokemon_id_seq', 6, true);
+SELECT pg_catalog.setval('public.pokemon_id_seq', 9, true);
 
 
 --
 -- Name: team_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.team_id_seq', 1, true);
+SELECT pg_catalog.setval('public.team_id_seq', 14, true);
 
 
 --
@@ -1120,7 +1185,7 @@ SELECT pg_catalog.setval('public.type_id_seq', 18, true);
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 1, true);
+SELECT pg_catalog.setval('public.user_id_seq', 3, true);
 
 
 --
@@ -1300,11 +1365,107 @@ ALTER TABLE ONLY public."AuthToken"
 
 
 --
+-- Name: AuthToken AuthToken_token_key28; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key28" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key29; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key29" UNIQUE (token);
+
+
+--
 -- Name: AuthToken AuthToken_token_key3; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."AuthToken"
     ADD CONSTRAINT "AuthToken_token_key3" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key30; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key30" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key31; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key31" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key32; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key32" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key33; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key33" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key34; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key34" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key35; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key35" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key36; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key36" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key37; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key37" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key38; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key38" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key39; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key39" UNIQUE (token);
 
 
 --
@@ -1316,11 +1477,171 @@ ALTER TABLE ONLY public."AuthToken"
 
 
 --
+-- Name: AuthToken AuthToken_token_key40; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key40" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key41; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key41" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key42; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key42" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key43; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key43" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key44; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key44" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key45; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key45" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key46; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key46" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key47; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key47" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key48; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key48" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key49; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key49" UNIQUE (token);
+
+
+--
 -- Name: AuthToken AuthToken_token_key5; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."AuthToken"
     ADD CONSTRAINT "AuthToken_token_key5" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key50; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key50" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key51; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key51" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key52; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key52" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key53; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key53" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key54; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key54" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key55; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key55" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key56; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key56" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key57; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key57" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key58; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key58" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key59; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key59" UNIQUE (token);
 
 
 --
@@ -1332,11 +1653,171 @@ ALTER TABLE ONLY public."AuthToken"
 
 
 --
+-- Name: AuthToken AuthToken_token_key60; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key60" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key61; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key61" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key62; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key62" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key63; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key63" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key64; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key64" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key65; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key65" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key66; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key66" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key67; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key67" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key68; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key68" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key69; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key69" UNIQUE (token);
+
+
+--
 -- Name: AuthToken AuthToken_token_key7; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."AuthToken"
     ADD CONSTRAINT "AuthToken_token_key7" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key70; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key70" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key71; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key71" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key72; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key72" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key73; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key73" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key74; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key74" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key75; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key75" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key76; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key76" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key77; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key77" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key78; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key78" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key79; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key79" UNIQUE (token);
 
 
 --
@@ -1348,11 +1829,107 @@ ALTER TABLE ONLY public."AuthToken"
 
 
 --
+-- Name: AuthToken AuthToken_token_key80; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key80" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key81; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key81" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key82; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key82" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key83; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key83" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key84; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key84" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key85; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key85" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key86; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key86" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key87; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key87" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key88; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key88" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key89; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key89" UNIQUE (token);
+
+
+--
 -- Name: AuthToken AuthToken_token_key9; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."AuthToken"
     ADD CONSTRAINT "AuthToken_token_key9" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key90; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key90" UNIQUE (token);
+
+
+--
+-- Name: AuthToken AuthToken_token_key91; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AuthToken"
+    ADD CONSTRAINT "AuthToken_token_key91" UNIQUE (token);
 
 
 --
@@ -1609,6 +2186,22 @@ ALTER TABLE ONLY public."pokemonXType"
 
 ALTER TABLE ONLY public."pokemonXType"
     ADD CONSTRAINT "pokemonXType_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES public.type(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: pokemon pokemon_type2Id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pokemon
+    ADD CONSTRAINT "pokemon_type2Id_fkey" FOREIGN KEY ("type2Id") REFERENCES public.type(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: pokemon pokemon_typeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pokemon
+    ADD CONSTRAINT "pokemon_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES public.type(id) ON UPDATE CASCADE;
 
 
 --
